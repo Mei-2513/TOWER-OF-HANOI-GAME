@@ -67,7 +67,7 @@ public class HanoiController {
                 }
             }
 
-            if (moved && model.isGameFinished()) {
+            if (moved && isWinConditionMet()) {
                 view.displayMessage("¡Has ganado!");
                 gameStarted = false;
             } else if (!moved) {
@@ -76,6 +76,27 @@ public class HanoiController {
         }
     }
 
+    private boolean isWinConditionMet() {
+        Stack<Integer> pegA = model.getPeg('A');
+        Stack<Integer> pegB = model.getPeg('B');
+        Stack<Integer> pegC = model.getPeg('C');
+
+        // Comprueba si todas las barras excepto una están vacías
+        if ((pegA.isEmpty() && pegB.isEmpty()) || (pegA.isEmpty() && pegC.isEmpty()) || (pegB.isEmpty() && pegC.isEmpty())) {
+            Stack<Integer> nonEmptyPeg = pegA.isEmpty() ? (pegB.isEmpty() ? pegC : pegB) : pegA;
+
+            int prevDisk = Integer.MIN_VALUE;
+            for (int disk : nonEmptyPeg) {
+                if (disk < prevDisk) {
+                    return false;
+                }
+                prevDisk = disk;
+            }
+            return true;
+        }
+
+        return false;
+    }
     private int readDiskCountFromFile(String filename, String targetLevel) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
