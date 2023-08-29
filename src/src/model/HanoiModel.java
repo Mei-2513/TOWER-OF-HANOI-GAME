@@ -11,7 +11,6 @@ import java.util.Stack;
 public class HanoiModel {
     private Stack<Integer> pegA, pegB, pegC;
     private int diskCount;
-    private String selectedSourcePeg;
 
     public HanoiModel() {
         pegA = new Stack<>();
@@ -42,13 +41,6 @@ public class HanoiModel {
         destPeg.push(disk);
         return true;
     }
-    public String getSelectedSourcePeg() {
-        return selectedSourcePeg;
-    }
-
-    public void setSelectedSourcePeg(String peg) {
-        selectedSourcePeg = peg;
-    }
 
     public boolean isGameFinished() {
         return pegA.isEmpty() && pegB.isEmpty();
@@ -64,8 +56,5 @@ public class HanoiModel {
         }
         return null;
     }
-
-    public int getDiskCount() {
-        return diskCount;
-    }
 }
+
