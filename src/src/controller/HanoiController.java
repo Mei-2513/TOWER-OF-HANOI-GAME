@@ -1,24 +1,27 @@
 package controller;
 
+import model.HanoiModel;
+import view.HanoiView;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Stack;
-import model.HanoiModel;
-import view.HanoiView;
-
 
 public class HanoiController {
     private HanoiModel model;
     private HanoiView view;
     private boolean gameStarted;
+    private int diskCount;
 
     public HanoiController(HanoiModel model, HanoiView view) {
         this.model = model;
         this.view = view;
         gameStarted = false;
+        diskCount = 0;
 
         view.addStartButtonListener(new StartButtonListener());
         view.addMoveButtonListener(new MoveButtonListener());
@@ -68,11 +71,31 @@ public class HanoiController {
             }
 
             if (moved && isWinConditionMet()) {
-                view.displayMessage("¡Has ganado!");
-                gameStarted = false;
+                int response = JOptionPane.showConfirmDialog(view, "¡Has ganado! ¿Quieres volver a intentarlo?", "Victoria", JOptionPane.YES_NO_OPTION);
+
+                if (response == JOptionPane.YES_OPTION) {
+                    restartGame(); // Llama a un nuevo método para reiniciar el juego
+                } else if (response == JOptionPane.NO_OPTION) {
+                    view.displayMessage("¡Hasta luego!");
+                    view.dispose(); // Cerrar la aplicación
+                }
             } else if (!moved) {
                 view.displayMessage("Movimiento no válido.");
             }
+        }
+    }
+
+    // Agrega este nuevo método para reiniciar el juego
+    private void restartGame() {
+        int response = JOptionPane.showConfirmDialog(view, "Debes seleccionar un nivel nuevamente para iniciar el juego.", "Reiniciar Juego", JOptionPane.OK_CANCEL_OPTION);
+
+        if (response == JOptionPane.OK_OPTION) {
+            String selectedLevel = view.getSelectedLevel();
+            diskCount = readDiskCountFromFile("src/input/niveles.txt", selectedLevel);
+            model.initialize(diskCount);
+            view.clearPegs();
+            updateView();
+            gameStarted = true; // Re-iniciar el juego
         }
     }
 
@@ -108,6 +131,7 @@ public class HanoiController {
 
         return false;
     }
+
     private int readDiskCountFromFile(String filename, String targetLevel) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -146,4 +170,3 @@ public class HanoiController {
         controller.play();
     }
 }
-
