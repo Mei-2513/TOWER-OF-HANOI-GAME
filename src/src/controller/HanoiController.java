@@ -5,21 +5,23 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Scanner;
 import java.util.Stack;
-
 import model.HanoiModel;
 import view.HanoiView;
+
 
 public class HanoiController {
     private HanoiModel model;
     private HanoiView view;
+    private boolean gameStarted;
 
     public HanoiController(HanoiModel model, HanoiView view) {
         this.model = model;
         this.view = view;
+        gameStarted = false;
 
         view.addStartButtonListener(new StartButtonListener());
+        view.addMoveButtonListener(new MoveButtonListener());
     }
 
     public void play() {
@@ -40,18 +42,37 @@ public class HanoiController {
             model.initialize(diskCount);
             view.clearPegs();
             updateView();
-
-            solveHanoi(diskCount, 'A', 'C', 'B');
-            view.displayMessage("¡Has ganado!");
+            gameStarted = true;
         }
     }
 
-    private void solveHanoi(int n, char source, char dest, char aux) {
-        if (n > 0) {
-            solveHanoi(n - 1, source, aux, dest);
-            model.moveDisk(source, dest);
-            updateView();
-            solveHanoi(n - 1, aux, dest, source);
+    private class MoveButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (!gameStarted) {
+                view.displayMessage("Debes iniciar el juego primero.");
+                return;
+            }
+
+            String[] selectedSourcePegs = view.getSelectedSourcePegs();
+            String[] selectedDestPegs = view.getSelectedDestPegs();
+
+            boolean moved = false;
+            for (String sourcePeg : selectedSourcePegs) {
+                for (String destPeg : selectedDestPegs) {
+                    moved = model.moveDisk(sourcePeg.charAt(0), destPeg.charAt(0));
+                    if (moved) {
+                        updateView();
+                    }
+                }
+            }
+
+            if (moved && model.isGameFinished()) {
+                view.displayMessage("¡Has ganado!");
+                gameStarted = false;
+            } else if (!moved) {
+                view.displayMessage("Movimiento no válido.");
+            }
         }
     }
 
@@ -93,3 +114,4 @@ public class HanoiController {
         controller.play();
     }
 }
+

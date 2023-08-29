@@ -2,12 +2,6 @@ package model;
 
 import java.util.Stack;
 
-import java.util.Stack;
-
-import java.util.*;
-
-import java.util.Stack;
-
 public class HanoiModel {
     private Stack<Integer> pegA, pegB, pegC;
     private int diskCount;
@@ -33,7 +27,7 @@ public class HanoiModel {
         Stack<Integer> sourcePeg = getPeg(source);
         Stack<Integer> destPeg = getPeg(dest);
 
-        if (sourcePeg.isEmpty() || (!destPeg.isEmpty() && sourcePeg.peek() > destPeg.peek())) {
+        if (sourcePeg.isEmpty()) {
             return false;
         }
 
@@ -41,6 +35,7 @@ public class HanoiModel {
         destPeg.push(disk);
         return true;
     }
+
 
     public boolean isGameFinished() {
         return pegA.isEmpty() && pegB.isEmpty();
