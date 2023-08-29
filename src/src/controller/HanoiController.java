@@ -85,12 +85,23 @@ public class HanoiController {
         if ((pegA.isEmpty() && pegB.isEmpty()) || (pegA.isEmpty() && pegC.isEmpty()) || (pegB.isEmpty() && pegC.isEmpty())) {
             Stack<Integer> nonEmptyPeg = pegA.isEmpty() ? (pegB.isEmpty() ? pegC : pegB) : pegA;
 
-            int prevDisk = Integer.MIN_VALUE;
-            for (int disk : nonEmptyPeg) {
-                if (disk < prevDisk) {
+            int prevDisk = Integer.MAX_VALUE;
+            Stack<Integer> tempStack = new Stack<>();
+
+            // Verifica orden y almacena temporalmente en otra pila
+            while (!nonEmptyPeg.isEmpty()) {
+                int disk = nonEmptyPeg.pop();
+                tempStack.push(disk);
+
+                if (disk > prevDisk) {
                     return false;
                 }
                 prevDisk = disk;
+            }
+
+            // Restaura los discos a su pila original
+            while (!tempStack.isEmpty()) {
+                nonEmptyPeg.push(tempStack.pop());
             }
             return true;
         }
