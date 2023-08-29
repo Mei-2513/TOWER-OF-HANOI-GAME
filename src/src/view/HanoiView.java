@@ -18,26 +18,28 @@ import javax.swing.ListSelectionModel;
 
 public class HanoiView extends JFrame {
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private JComboBox<String> levelComboBox;
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private JComboBox<String> levelComboBox;
     private JButton startButton;
     private JButton moveButton;
     private JList<String> sourceList;
     private JList<String> destList;
     private JTextArea pegsTextArea;
+    private JLabel groupLabel;
 
     public HanoiView() {
         setTitle("Torre de Hanoi");
         setSize(400, 400);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
         JPanel controlsPanel = new JPanel();
-        controlsPanel.setLayout(new GridLayout(3, 2));
+        controlsPanel.setLayout(new GridLayout(4, 4));
 
         levelComboBox = new JComboBox<>(new String[]{"Principiantes", "Novato", "Intermedio", "Avanzado", "Experto", "Maestro"});
         controlsPanel.add(new JLabel("Selecciona la dificultad:"));
@@ -62,13 +64,23 @@ public class HanoiView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(pegsTextArea);
         panel.add(scrollPane, BorderLayout.CENTER);
 
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+
+
         startButton = new JButton("Iniciar Juego");
-        panel.add(startButton, BorderLayout.SOUTH);
+        bottomPanel.add(startButton, BorderLayout.CENTER);
+
+        groupLabel = new JLabel("Grupo: Silvia Juliana Rodriguez Rodriguez (202023822)"
+                + "\r\n"
+                + "Juan David López Castro (202023451) ");
+        bottomPanel.add(groupLabel, BorderLayout.SOUTH);
+
+        panel.add(bottomPanel, BorderLayout.SOUTH);
 
         add(panel);
         setLocationRelativeTo(null);
     }
-
     public void addStartButtonListener(ActionListener listener) {
         startButton.addActionListener(listener);
     }
@@ -85,13 +97,16 @@ public class HanoiView extends JFrame {
         return sourceList.getSelectedValuesList().toArray(new String[0]);
     }
 
-    
+
 
     public String[] getSelectedDestPegs() {
         return destList.getSelectedValuesList().toArray(new String[0]);
     }
+    public void setGroupInfo(String info) {
+        groupLabel.setText(info);
+    }
 
-    
+
 
     public void displayPegs(Stack<Integer> pegA, Stack<Integer> pegB, Stack<Integer> pegC) {
         pegsTextArea.setText("A: " + pegA + "\nB: " + pegB + "\nC: " + pegC);
@@ -100,7 +115,7 @@ public class HanoiView extends JFrame {
     public void displayMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
-    
+
     public void clearPegs() {
         pegsTextArea.setText("");
     }

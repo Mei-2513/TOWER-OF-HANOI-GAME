@@ -1,6 +1,9 @@
 package model;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Stack;
+import java.util.ArrayList;
 
 public class HanoiModel {
     private Stack<Integer> pegA, pegB, pegC;
@@ -10,16 +13,28 @@ public class HanoiModel {
         pegA = new Stack<>();
         pegB = new Stack<>();
         pegC = new Stack<>();
-        diskCount = 0;
+        setDiskCount(0);
     }
 
     public void initialize(int diskCount) {
-        this.diskCount = diskCount;
+        this.setDiskCount(diskCount);
+        List<Integer> disks = new ArrayList<>();
+
+        // Agregar discos a la lista en orden ascendente
+        for (int i = 1; i <= diskCount; i++) {
+            disks.add(i);
+        }
+
+        // Mezclar la lista para distribuir los discos aleatoriamente
+        Collections.shuffle(disks);
+
         pegA.clear();
         pegB.clear();
         pegC.clear();
-        for (int i = diskCount; i > 0; i--) {
-            pegA.push(i);
+
+        // Distribuir discos en las pilas
+        for (int i = 0; i < diskCount; i++) {
+            pegA.push(disks.get(i));
         }
     }
 
@@ -51,5 +66,12 @@ public class HanoiModel {
         }
         return null;
     }
-}
 
+    public int getDiskCount() {
+        return diskCount;
+    }
+
+    public void setDiskCount(int diskCount) {
+        this.diskCount = diskCount;
+    }
+}
